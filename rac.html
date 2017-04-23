@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8">
+    <style>
+      * {
+        margin: 0px;
+        padding: 0px;
+        font-weight: normal;
+        font-style: normal;
+        vertical-align: baseline;
+        list-style: none;
+      }
+      body {
+        font: normal 68% Verdana, Geneva, sans-serif;
+        color: #2685AC;
+        font-size: 68%;
+      }
+      ul.asignatura {
+        padding: 8px 10px;
+      }
+      ul.asignatura>li{
+        border-bottom: 1px dotted #CCC;
+        padding-top: 5px;
+        padding-bottom: 3px;
+      }
+      ul.asignatura>li>ul {
+        padding-left: 10px;
+      }
+      .nombre {
+        display: inline-block;
+        max-width: 90%;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+      span.nota {
+        display: block;
+        float: right;
+        font-weight: bold;
+      }
+    </style>
+</head>
+<body>
+
+<script>
+  if (window.XMLHttpRequest) {
+    xmlhttp=new XMLHttpRequest();
+  }else{
+    xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+  }
+  // xmlhttp.open("GET","rac.xml",false);
+  xmlhttp.open("GET","http://cv.uoc.edu/rb/inici/api/enrollment/rac.xml",false);
+  xmlhttp.send();
+  xmlDoc=xmlhttp.responseXML;
+  var asignaturas=xmlDoc.getElementsByTagName("asignatura");
+  document.write("<ul class='asignatura'>");
+  for(var i=1;i<asignaturas.length;i++) {
+    nombre=asignaturas[i].getElementsByTagName("descripcion")[0].childNodes[0].nodeValue;
+    notaFinal=asignaturas[i].getElementsByTagName("notaFinal")[0].childNodes[0].nodeValue;
+    document.write("<li>");
+      document.write("<div>");
+      document.write("<div class='nombre'>");
+      document.write(nombre);
+      document.write("</div><span class='nota'>&nbsp;");
+      document.write(notaFinal);
+      document.write("</span>");
+      document.write("</div>");
+
+    actividades=asignaturas[i].getElementsByTagName("actividad");
+    document.write("<ul>");
+    for(var j=1;j<actividades.length;j++) {
+      descripcion=actividades[j].getElementsByTagName("descripcion")[0].childNodes[0].nodeValue;
+      nota=actividades[j].getElementsByTagName("nota")[0].childNodes[0].nodeValue;
+      if(nota !== "-") {
+        document.write("<li>");
+        document.write("<div><div class='nombre'>");
+          document.write(descripcion);
+          document.write("</div><span class='nota'>&nbsp;");
+          document.write(nota);
+          document.write("</span>");
+        document.write("</div>");
+        document.write("</li>");
+      }
+
+    }
+    document.write("</ul>");
+    document.write("</li>");
+  }
+  document.write("</ul>");
+</script>
+</body>
+</html>
