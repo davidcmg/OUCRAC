@@ -22,7 +22,7 @@
   ul.asignatura>li{
     border-bottom: 1px dotted #CCC;
     padding-top: 5px;
-    padding-bottom: 3px;
+    padding-bottom: 5px;
   }
   ul.asignatura>li>ul {
     padding-left: 10px;
@@ -39,58 +39,83 @@
     float: right;
     font-weight: bold;
   }
+  .comentario {
+    border-bottom: 1px dotted #2685AC;
+    text-decoration: none;
+  }
   </style>
 </head>
 <body>
 
-  <script>
-  if (window.XMLHttpRequest) {
-    xmlhttp=new XMLHttpRequest();
-  }else{
-    xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+  <script type="text/javascript">
+  function descargar_datos(){
+    if (window.XMLHttpRequest) {
+      xmlhttp=new XMLHttpRequest();
+    }else{
+      xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+    }
+    // xmlhttp.open("GET","rac.xml",false);
+    xmlhttp.open("GET","http://cv.uoc.edu/rb/inici/api/enrollment/rac.xml",false);
+    xmlhttp.send();
+    return xmlhttp.responseXML;
   }
-  // xmlhttp.open("GET","rac.xml",false);
-  xmlhttp.open("GET","http://cv.uoc.edu/rb/inici/api/enrollment/rac.xml",false);
-  xmlhttp.send();
-  xmlDoc=xmlhttp.responseXML;
-  var asignaturas=xmlDoc.getElementsByTagName("asignatura");
-  document.write("<ul class='asignatura'>");
-  for(var i=0;i<asignaturas.length;i++) {
-    if(asignaturas[i].parentNode.tagName != 'listaAsignaturas') {
-      nombre=asignaturas[i].getElementsByTagName("descripcion")[0].childNodes[0].nodeValue;
-      notaFinal=asignaturas[i].getElementsByTagName("notaFinal")[0].childNodes[0].nodeValue;
-      document.write("<li>");
+  function mostrar_comentarios(comentarios){
+    if(comentarios){
+      var com="";
+      console.debug(comentarios);
+      for(var i=0;i<comentarios.length;i++){
+        var txt=comentarios[i].childNodes[0].nodeValue;
+        if(txt){
+          com +=txt;
+        }
+      }
+      return com;
+    }
+  }
+  function mostrar(tipo, nombre, nota, comentarios) {
+    if(tipo==='asignatura' || nota!=='-'){
+      var com=mostrar_comentarios(comentarios);
       document.write("<div>");
-      document.write("<div class='nombre'>");
+      if(com){
+        document.write("<div class='nombre comentario' title='"+com+"'>");
+      } else {
+        document.write("<div class='nombre'>");
+      }
       document.write(nombre);
-      document.write("</div><span class='nota'>&nbsp;");
-      document.write(notaFinal);
+      document.write("</div><span class='nota'>");
+      document.write(nota);
       document.write("</span>");
       document.write("</div>");
-
-      actividades=asignaturas[i].getElementsByTagName("actividad");
-      document.write("<ul>");
-      for(var j=0;j<actividades.length;j++) {
-        if(actividades[j].parentNode.tagName == 'actividad'){
-          descripcion=actividades[j].getElementsByTagName("descripcion")[0].childNodes[0].nodeValue;
-          nota=actividades[j].getElementsByTagName("nota")[0].childNodes[0].nodeValue;
-          if(nota !== "-") {
+    }
+  }
+  function listar(asignaturas) {
+    document.write("<ul class='asignatura'>");
+    for(var i=0;i<asignaturas.length;i++){
+      if(asignaturas[i].parentNode.tagName != 'listaAsignaturas') {
+        nombre=asignaturas[i].getElementsByTagName("descripcion")[0].childNodes[0].nodeValue;
+        notaFinal=asignaturas[i].getElementsByTagName("notaFinal")[0].childNodes[0].nodeValue;
+        document.write("<li>");
+        mostrar('asignatura',nombre, notaFinal);
+        document.write("<ul>");
+        actividades=asignaturas[i].getElementsByTagName("actividad");
+        for(var j=0;j<actividades.length;j++) {
+          if(actividades[j].parentNode.tagName == 'actividad'){
+            descripcion=actividades[j].getElementsByTagName("descripcion")[0].childNodes[0].nodeValue;
+            nota=actividades[j].getElementsByTagName("nota")[0].childNodes[0].nodeValue;
+            comentarios=actividades[j].getElementsByTagName("texto");
             document.write("<li>");
-            document.write("<div><div class='nombre'>");
-            document.write(descripcion);
-            document.write("</div><span class='nota'>&nbsp;");
-            document.write(nota);
-            document.write("</span>");
-            document.write("</div>");
+            mostrar('actividad',descripcion,nota,comentarios);
             document.write("</li>");
           }
         }
+        document.write("</ul>");
+        document.write("</li>");
       }
-      document.write("</ul>");
-      document.write("</li>");
     }
+    document.write("</ul>");
   }
-  document.write("</ul>");
+  xmlDoc=descargar_datos();
+  listar(xmlDoc.getElementsByTagName("asignatura"));
   </script>
 </body>
 </html>
