@@ -91,7 +91,7 @@
   function listar(asignaturas) {
     document.write("<ul class='asignatura'>");
     for(var i=0;i<asignaturas.length;i++){
-      if(asignaturas[i].parentNode.tagName != 'listaAsignaturas') {
+      if(asignaturas[i].parentNode.tagName == 'asignatura' || asignaturas.length == 1) {
         nombre=asignaturas[i].getElementsByTagName("descripcion")[0].childNodes[0].nodeValue;
         notaFinal=asignaturas[i].getElementsByTagName("notaFinal")[0].childNodes[0].nodeValue;
         document.write("<li>");
