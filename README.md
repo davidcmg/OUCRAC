@@ -9,3 +9,9 @@ Muestra las notas del RAC en "Mi UOC"
 5. Cubrir el formulario con el siguiente contenido:
 6. **Título:** RAC
 7. **Código HTML:** El texto que contiene el archivo rac.html ([enlace](https://raw.githubusercontent.com/davidcmg/OUCRAC/master/rac.html "RAC")).
+
+**Activar o desactivar comentarios**
+Por defecto los comentarios aparecen activados, para desactivarlos hay que cambiar la línea
+    var op_comentarios = true;
+por
+    var op_comentarios = false;

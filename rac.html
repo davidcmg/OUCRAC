@@ -48,6 +48,9 @@
 <body>
 
   <script type="text/javascript">
+
+  var op_comentarios = true;
+
   function descargar_datos(){
     if (window.XMLHttpRequest) {
       xmlhttp=new XMLHttpRequest();
@@ -76,7 +79,7 @@
     if(tipo==='asignatura' || nota!=='-'){
       var com=mostrar_comentarios(comentarios);
       document.write("<div>");
-      if(com){
+      if(com && op_comentarios){
         document.write("<div class='nombre comentario' title='"+com+"'>");
       } else {
         document.write("<div class='nombre'>");
