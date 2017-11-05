@@ -39,6 +39,12 @@
     float: right;
     font-weight: bold;
   }
+  span.nota.green {
+	color:green;
+  }
+  span.nota.red {
+	color:red;
+  }
   .comentario {
     border-bottom: 1px dotted #2685AC;
     text-decoration: none;
@@ -75,6 +81,16 @@
       return com;
     }
   }
+  function colorear_nota(nota){
+    var color;
+    if (nota){
+      var n='C-'.localeCompare(nota);
+      if (n>0){
+        color='green';
+      } else color='red';
+    }
+    return color;
+  }
   function mostrar(tipo, nombre, nota, comentarios) {
     if(tipo==='asignatura' || nota!=='-'){
       var com=mostrar_comentarios(comentarios);
@@ -85,7 +101,7 @@
         document.write("<div class='nombre'>");
       }
       document.write(nombre);
-      document.write("</div><span class='nota'>");
+      document.write("</div><span class='nota "+ colorear_nota(nota) +"'>");
       document.write(nota);
       document.write("</span>");
       document.write("</div>");
@@ -120,5 +136,3 @@
   xmlDoc=descargar_datos();
   listar(xmlDoc.getElementsByTagName("asignatura"));
   </script>
-</body>
-</html>
