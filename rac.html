@@ -81,15 +81,29 @@
       return com;
     }
   }
-  function colorear_nota(nota){
-    var color;
-    if (nota){
-      var n="C-">nota;
-      if (n>0){
-        color='green';
-      } else color='red';
-    }
-    return color;
+  function colorear_nota(nota) {
+      var color;
+      if (nota) {
+          var n="C-">nota;
+          if (n>0) {
+              color='green';
+          } else color='red';
+          switch(nota) {
+              case "A":
+              case "B":
+              case "C+":
+              case "SB":
+              case "NO":
+              case "A":
+              case "AP":
+              case "M":
+                  color='green';
+                  break;
+              default:
+                  break;
+          }
+      }
+      return color;
   }
   function mostrar(tipo, nombre, nota, comentarios) {
     if(tipo==='asignatura' || nota!=='-'){
