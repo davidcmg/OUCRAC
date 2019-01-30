@@ -49,6 +49,7 @@
     border-bottom: 1px dotted #2685AC;
     text-decoration: none;
   }
+  .help {cursor: help;}
   </style>
 </head>
 <body>
@@ -63,7 +64,7 @@
     }else{
       xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
     }
-    // xmlhttp.open("GET","rac.xml",false);
+    //xmlhttp.open("GET","rac.xml",false);
     xmlhttp.open("GET","http://cv.uoc.edu/rb/inici/api/enrollment/rac.xml",false);
     xmlhttp.send();
     return xmlhttp.responseXML;
@@ -99,27 +100,54 @@
               case "M":
                   color='green';
                   break;
+			  case "SU":
+				  color='red';
+				  break;
               default:
                   break;
           }
       }
       return color;
   }
-  function mostrar(tipo, nombre, nota, comentarios) {
-    if(tipo==='asignatura' || nota!=='-'){
-      var com=mostrar_comentarios(comentarios);
-      document.write("<div>");
-      if(com && op_comentarios){
-        document.write("<div class='nombre comentario' title='"+com+"'>");
-      } else {
-        document.write("<div class='nombre'>");
-      }
-      document.write(nombre);
-      document.write("</div><span class='nota "+ colorear_nota(nota) +"'>");
-      document.write(nota);
-      document.write("</span>");
-      document.write("</div>");
+  function traducir(nota) {
+    switch(nota) {
+		case "SU":
+			return "SUSPENSO";
+		case "A":
+			return "APROBADO";
+		case "NO":
+			return "NOTABLE";
+		case "EX":
+			return "SOBRESALIENTE";
+		case "M":
+			return "MATRÍCULA DE HONOR";
+		break;
     }
+  }
+  function mostrar(tipo, nombre, nota, comentarios) {
+	if(tipo==='asignatura' && nota!=='-'){
+		document.write("<div class='nombre'>");
+		document.write(nombre);
+		document.write("</div><span class='nota "+ colorear_nota(nota) +"'>");
+		document.write(traducir(nota));
+		document.write("</span>");
+		document.write("</div>");
+	} else {
+		if(tipo==='asignatura' || nota!=='-'){
+		  var com=mostrar_comentarios(comentarios);
+		  document.write("<div>");
+		  if(com && op_comentarios){
+			document.write("<div class='nombre comentario help' title='"+com+"'>");
+		  } else {
+			document.write("<div class='nombre'>");
+		  }
+		  document.write(nombre);
+		  document.write("</div><span class='nota "+ colorear_nota(nota) +"'>");
+		  document.write(nota);
+		  document.write("</span>");
+		  document.write("</div>");
+		}
+	}
   }
   function listar(asignaturas) {
     document.write("<ul class='asignatura'>");
